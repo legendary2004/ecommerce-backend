@@ -1,9 +1,7 @@
 import { BadRequestException, ConflictException, Injectable, InternalServerErrorException, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { MailService } from 'src/mail/mail.service';
-import { Prisma } from 'generated/prisma';
 import { CreateUserDTO } from './dto/create-user.dto';
-import { redirect } from 'react-router-dom';
 import { ContactMailDTO } from './dto/contact-mail.dto';
 import { AuthService } from 'src/auth/auth.service';
 import { ConfigService } from '@nestjs/config';
