@@ -1,0 +1,120 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Users {
+  id         Int    @id @default(autoincrement())
+  username   String
+  email      String @unique
+  password   String
+  isVerified Int
+  cart    Cart[]
+  wishlist  Wishlist[]
+}
+
+model Products {
+  id        Int      @id @default(autoincrement())
+  name      String
+  category  Int
+  description   String
+  price     Int
+  stock     Int
+  warranty  Int
+  ram       Int
+  storage   Int
+  processor String
+  display   String
+  width     Int
+  height    Int
+  pictures  Pictures[]
+  colors    Colors[]
+  cart      Cart[]
+  wishlist  Wishlist[]
+
+  categoryRef Category @relation(fields: [category], references: [id])
+}
+
+
+model Category {
+  id         Int    @id @default(autoincrement())
+  name      String
+  products Products[]
+}
+
+
+model Colors {
+  id         Int    @id @default(autoincrement())
+  product    Int
+  value      String
+  stockValue Int
+
+  productRef Products @relation(fields: [product], references: [id])
+}
+
+model Pictures {
+  id         Int    @id @default(autoincrement())
+  product   Int
+  src   String
+
+  productRef  Products @relation(fields: [product], references: [id])
+}
+
+model Cart {
+  id         Int    @id @default(autoincrement())
+  user  Int
+  product Int
+  stock Int
+  color String
+
+  userRef Users @relation(fields: [user], references: [id])
+  productRef  Products @relation(fields: [product], references: [id])
+}
+
+model OrderItem {
+  id         Int    @id @default(autoincrement())
+  order      Int
+  name        String
+  stock       Int
+  color       String
+  price       Int
+
+  orderRef  Order  @relation(fields: [order], references: [id])
+  @@map("order_items")
+}
+
+model Order {
+  id          Int    @id @default(autoincrement())
+  firstName   String
+  lastName    String
+  email       String
+  phone       String
+  street      String
+  country     String
+  city        String
+  zip         Int
+  payment_id  String
+  total       Int
+  items        OrderItem[]
+}
+
+model Wishlist {
+  id          Int    @id @default(autoincrement())
+  user        Int
+  product     Int
+
+  userRef     Users   @relation(fields: [user], references: [id])
+  productRef     Products   @relation(fields: [product], references: [id])
+
+}
